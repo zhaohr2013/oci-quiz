@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCI 刷题系统</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+h2 { font-size: 20px; }
+button { display: block; margin: 10px 0; padding: 12px; width: 100%; font-size: 16px; }
+.correct { background-color: #d4edda; }
+.wrong { background-color: #f8d7da; }
+.hidden { display: none; }
+#nextBtn { background-color: #007bff; color: white; }
+#modeBtn { background-color: #28a745; color: white; }
+</style>
+</head>
+<body>
+
+<h2 id="question"></h2>
+<div id="options"></div>
+<p id="result"></p>
+<button id="nextBtn" class="hidden">下一题</button>
+<button id="modeBtn">切换错题模式</button>
+
+<script>
+let questions = [
+{
+    question: "以下哪项准确描述了“临时主体”？",
+    options: ["动态组的另一种说法", "有限生命周期的用户账户", "授予资源的临时凭证", "长期存在的服务账户"],
+    answer: 2,
+    explanation: "临时主体是授予资源的临时安全凭证，用于实例主体等场景。"
+},
+{
+    question: "以下哪项不是块存储的有效操作？",
+    options: ["从备份恢复到更大卷", "克隆为更大卷", "在线扩容已有卷", "附加到不同可用域实例"],
+    answer: 3,
+    explanation: "块卷不能跨可用域附加。"
+}
+];
+
+let currentIndex = 0;
+let wrongQuestions = [];
+let wrongMode = false;
+
+function loadQuestion() {
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("nextBtn").classList.add("hidden");
+
+    let qList = wrongMode ? wrongQuestions : questions;
+
+    if (qList.length === 0) {
+        document.getElementById("question").innerHTML = "暂无题目";
+        document.getElementById("options").innerHTML = "";
+        return;
+    }
+
+    if (currentIndex >= qList.length) currentIndex = 0;
+
+    let q = qList[currentIndex];
+    document.getElementById("question").innerHTML = "第 " + (currentIndex + 1) + " 题：<br>" + q.question;
+
+    let optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach((opt, index) => {
+        let btn = document.createElement("button");
+        btn.innerText = String.fromCharCode(65 + index) + ". " + opt;
+        btn.onclick = () => checkAnswer(index);
+        optionsDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected) {
+    let qList = wrongMode ? wrongQuestions : questions;
+    let q = qList[currentIndex];
+    let result = document.getElementById("result");
+
+    if (selected === q.answer) {
+        result.innerHTML = "✅ 正确！自动进入下一题...";
+        setTimeout(() => {
+            currentIndex++;
+            loadQuestion();
+        }, 800);
+    } else {
+        result.innerHTML = "❌ 错误！<br>正确答案：" +
+            String.fromCharCode(65 + q.answer) +
+            "<br>解析：" + q.explanation;
+        if (!wrongQuestions.includes(q)) {
+            wrongQuestions.push(q);
+        }
+        document.getElementById("nextBtn").classList.remove("hidden");
+    }
+}
+
+document.getElementById("nextBtn").onclick = function() {
+    currentIndex++;
+    loadQuestion();
+};
+
+document.getElementById("modeBtn").onclick = function() {
+    wrongMode = !wrongMode;
+    currentIndex = 0;
+    alert(wrongMode ? "已进入错题模式" : "已进入正常模式");
+    loadQuestion();
+};
+
+loadQuestion();
+</script>
+
+</body>
+</html>
