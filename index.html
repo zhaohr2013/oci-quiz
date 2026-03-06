@@ -60,8 +60,6 @@ margin-top:10px;
 <h2>OCI刷题系统</h2>
 
 <button onclick="toggleLang()" id="langBtn">中文</button>
-<button onclick="prev()">上一题</button>
-<button onclick="next()">下一题</button>
 <button onclick="clearProgress()">清空记录</button>
 
 <br><br>
@@ -75,9 +73,9 @@ margin-top:10px;
 <h3 id="question"></h3>
 
 <div id="options"></div>
-
+<button onclick="prev()">上一题</button>
+<button onclick="next()">下一题</button>
 <div id="explain"></div>
-
 <div class="stat">
 正确: <span id="correct">0</span> |
 错误: <span id="wrong">0</span> |
