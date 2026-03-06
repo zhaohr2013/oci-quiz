@@ -9,8 +9,12 @@
 body{
 font-family:Arial;
 padding:20px;
-max-width:600px;
+max-width:650px;
 margin:auto;
+}
+
+h3{
+text-align:left;
 }
 
 button{
@@ -21,6 +25,7 @@ font-size:16px;
 border-radius:8px;
 border:1px solid #ccc;
 background:#f7f7f7;
+text-align:left;
 }
 
 .correct{
@@ -39,6 +44,11 @@ gap:10px;
 .stat{
 margin-top:15px;
 font-weight:bold;
+}
+
+#result{
+margin-top:10px;
+font-size:16px;
 }
 
 </style>
@@ -76,7 +86,6 @@ let current=0
 let correct=0
 let wrong=0
 
-// 读取题库
 fetch("questions.json")
 .then(res=>res.json())
 .then(data=>{
@@ -84,7 +93,6 @@ questions=data
 showQuestion()
 })
 
-// 显示题目
 function showQuestion(){
 
 if(questions.length===0) return
@@ -114,7 +122,6 @@ document.getElementById("options").innerHTML=html
 
 }
 
-// 判断答案
 function check(i){
 
 let q=questions[current]
@@ -126,23 +133,38 @@ document.getElementById("opt"+k).disabled=true
 if(i===q.answer){
 
 document.getElementById("opt"+i).classList.add("correct")
+
 document.getElementById("result").innerText="✔ 正确"
+
 correct++
+
+updateStat()
+
+setTimeout(()=>{
+
+next()
+
+},1000)
 
 }else{
 
 document.getElementById("opt"+i).classList.add("wrong")
-document.getElementById("opt"+q.answer).classList.add("correct")
-document.getElementById("result").innerText="✘ 错误"
-wrong++
 
-}
+document.getElementById("opt"+q.answer).classList.add("correct")
+
+let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+
+document.getElementById("result").innerText=
+"✘ 错误\n正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
+
+wrong++
 
 updateStat()
 
 }
 
-// 下一题
+}
+
 function next(){
 
 if(current<questions.length-1){
@@ -154,7 +176,6 @@ showQuestion()
 
 }
 
-// 上一题
 function prev(){
 
 if(current>0){
@@ -166,7 +187,6 @@ showQuestion()
 
 }
 
-// 切换语言
 function toggleLang(){
 
 if(lang==="jp"){
@@ -185,7 +205,6 @@ showQuestion()
 
 }
 
-// 更新统计
 function updateStat(){
 
 document.getElementById("correct").innerText=correct
