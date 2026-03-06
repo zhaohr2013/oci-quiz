@@ -1,43 +1,62 @@
 [
-{
-"jp":"OCIでアイデンティティ管理を提供するサービスはどれですか？",
-"cn":"OCI中提供身份管理的服务是哪一个？",
-
-"options_jp":[
-"IAM",
-"VCN",
-"Object Storage",
-"Compute"
-],
-
-"options_cn":[
-"IAM",
-"VCN",
-"对象存储",
-"计算服务"
-],
-
-"answer":0
-},
-
-{
-"jp":"OCIのオブジェクトストレージの特徴はどれですか？",
-"cn":"OCI对象存储的特点是什么？",
-
-"options_jp":[
-"ブロックストレージ",
-"高耐久オブジェクト保存",
-"仮想マシン",
-"データベース"
-],
-
-"options_cn":[
-"块存储",
-"高持久对象存储",
-"虚拟机",
-"数据库"
-],
-
-"answer":1
-}
+  {
+    "jp": "エフェメラルプリンシパルを正確に説明しているのはどの文ですか？",
+    "cn": "Which statement accurately describes ephemeral principals?",
+    "options_jp": [
+      "エフェメラルプリンシパルは、リソースに付与される一時的な資格情報です。",
+      "エフェメラルプリンシパルは、動的グループの別名です。",
+      "エフェメラルプリンシパルは、寿命が限られたユーザーアカウントです。",
+      "エフェメラルプリンシパルは、長寿命のサービスアカウントを表します。"
+    ],
+    "options_cn": [
+      "Ephemeral principals are temporary credentials granted to resources.",
+      "Ephemeral principals are another term for dynamic groups.",
+      "Ephemeral principals are user accounts with limited lifespans.",
+      "Ephemeral principals represent long-lived service accounts."
+    ],
+    "answer": 0,
+    "explain_jp": "エフェメラルプリンシパルはOCIでリソースに付与される一時的な資格情報です。",
+    "explain_cn": "Ephemeral principals are temporary security credentials granted to resources in OCI."
+  },
+  {
+    "jp": "次のうち、OCI VCNを作成するために使用できるRFC1918 CIDRプレフィックスはどれですか？",
+    "cn": "Which of the following is a valid RFC1918 CIDR prefix for creating an OCI VCN?",
+    "options_jp": [
+      "192.168.0.0/16",
+      "0.0.0.0/0",
+      "192.268.0.0/24",
+      "10.0.0.0/8"
+    ],
+    "options_cn": [
+      "192.168.0.0/16",
+      "0.0.0.0/0",
+      "192.268.0.0/24",
+      "10.0.0.0/8"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explain_jp": "RFC1918で定義されたプライベートIP範囲は10.0.0.0/8、172.16.0.0/12、192.168.0.0/16です。",
+    "explain_cn": "RFC1918 private IP ranges include 10.0.0.0/8 and 192.168.0.0/16."
+  },
+  {
+    "jp": "OCIでアイデンティティ管理を提供するサービスはどれですか？",
+    "cn": "Which service provides identity management in OCI?",
+    "options_jp": [
+      "IAM",
+      "VCN",
+      "Object Storage",
+      "Compute"
+    ],
+    "options_cn": [
+      "IAM",
+      "VCN",
+      "Object Storage",
+      "Compute"
+    ],
+    "answer": 0,
+    "explain_jp": "OCIのユーザー、グループ、ポリシー管理はIAMサービスで提供されます。",
+    "explain_cn": "IAM provides identity and access management in OCI."
+  }
 ]
