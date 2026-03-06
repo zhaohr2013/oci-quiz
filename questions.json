@@ -15,7 +15,26 @@
       "临时主体代表长寿命的服务账户。"
     ],
     "answer": 0,
-    "explain_jp": "Oracle Cloud Infrastructure (OCI) におけるエフェメラルプリンシパルは、リソース（コンピュートインスタンスなど）に付与される一時的なセキュリティ資格情報を指します。",
-    "explain_cn": "Oracle Cloud Infrastructure (OCI) 中的临时主体是指授予资源（如计算实例）的临时安全凭据，使其能够安全地与 OCI 服务进行交互。"
+    [span_0](start_span)"explain_jp": "OCIにおけるエフェメラルプリンシパルは、リソースに付与される一時的な資格情報で、長期的なキー管理なしでAPIコールを可能にします[span_0](end_span)。",
+    [span_1](start_span)"explain_cn": "OCI 中的临时主体是指授予资源的临时安全凭据，允许在无需管理长期密钥的情况下进行 API 调用[span_1](end_span)。"
+  },
+  {
+    "jp": "Oracle Cloud Infrastructure (OCI) の仮想クラウドネットワーク (VCN)を作成するために使用できる有効な RFC 1918 CIDR プレフィックスはどれですか? (2つ選択)",
+    "cn": "以下哪些是可以用于创建 Oracle Cloud Infrastructure (OCI) 虚拟云网络 (VCN) 的有效 RFC 1918 CIDR 前缀？（选择两个）",
+    "options_jp": [
+      "192.168.0.0/16",
+      "0.0.0.0/0",
+      "192.268.0.0/24",
+      "10.0.0.0/8"
+    ],
+    "options_cn": [
+      "192.168.0.0/16",
+      "0.0.0.0/0",
+      "192.268.0.0/24",
+      "10.0.0.0/8"
+    ],
+    "answer": [0, 3],
+    [span_2](start_span)"explain_jp": "RFC 1918はプライベートネットワーク用のIP範囲を定義しており、OCIでは192.168.0.0/16や10.0.0.0/8がVCN作成に利用可能です[span_2](end_span)。",
+    [span_3](start_span)"explain_cn": "RFC 1918 定义了私有网络的 IP 地址范围，在 OCI 中，192.168.0.0/16 和 10.0.0.0/8 是创建 VCN 的有效前缀[span_3](end_span)。"
   }
 ]
