@@ -49,6 +49,7 @@ font-weight:bold;
 #result{
 margin-top:10px;
 font-size:16px;
+white-space:pre-line;
 }
 
 </style>
@@ -83,14 +84,16 @@ font-size:16px;
 let lang="jp"
 let questions=[]
 let current=0
-let correct=0
-let wrong=0
+
+// 保存用户答案
+let answers=JSON.parse(localStorage.getItem("answers")||"{}")
 
 fetch("questions.json")
 .then(res=>res.json())
 .then(data=>{
 questions=data
 showQuestion()
+updateStat()
 })
 
 function showQuestion(){
@@ -120,31 +123,40 @@ ${String.fromCharCode(65+i)}. ${o}
 
 document.getElementById("options").innerHTML=html
 
+// 恢复之前选择的答案
+if(answers[current]!=null){
+
+let user=answers[current]
+let q=questions[current]
+
+document.getElementById("opt"+user).classList.add(
+user===q.answer?"correct":"wrong"
+)
+
+document.getElementById("opt"+q.answer).classList.add("correct")
+
+showExplain()
+
+disableOptions()
+
+}
+
 }
 
 function check(i){
 
 let q=questions[current]
 
-for(let k=0;k<q.options_jp.length;k++){
-document.getElementById("opt"+k).disabled=true
-}
+// 已经做过不再重复统计
+if(answers[current]!=null) return
+
+answers[current]=i
+
+localStorage.setItem("answers",JSON.stringify(answers))
 
 if(i===q.answer){
 
 document.getElementById("opt"+i).classList.add("correct")
-
-document.getElementById("result").innerText="✔ 正确"
-
-correct++
-
-updateStat()
-
-setTimeout(()=>{
-
-next()
-
-},1000)
 
 }else{
 
@@ -152,15 +164,33 @@ document.getElementById("opt"+i).classList.add("wrong")
 
 document.getElementById("opt"+q.answer).classList.add("correct")
 
-let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+}
 
-document.getElementById("result").innerText=
-"✘ 错误\n正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
+showExplain()
 
-wrong++
+disableOptions()
 
 updateStat()
 
+}
+
+function showExplain(){
+
+let q=questions[current]
+
+let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+
+document.getElementById("result").innerText=
+"正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
+
+}
+
+function disableOptions(){
+
+let q=questions[current]
+
+for(let k=0;k<q.options_jp.length;k++){
+document.getElementById("opt"+k).disabled=true
 }
 
 }
@@ -168,10 +198,8 @@ updateStat()
 function next(){
 
 if(current<questions.length-1){
-
 current++
 showQuestion()
-
 }
 
 }
@@ -179,10 +207,8 @@ showQuestion()
 function prev(){
 
 if(current>0){
-
 current--
 showQuestion()
-
 }
 
 }
@@ -206,6 +232,23 @@ showQuestion()
 }
 
 function updateStat(){
+
+let correct=0
+let wrong=0
+
+questions.forEach((q,i)=>{
+
+if(answers[i]!=null){
+
+if(answers[i]===q.answer){
+correct++
+}else{
+wrong++
+}
+
+}
+
+})
 
 document.getElementById("correct").innerText=correct
 document.getElementById("wrong").innerText=wrong
