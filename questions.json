@@ -15,64 +15,7 @@
       "临时主体代表长寿命的服务账户。"
     ],
     "answer": 0,
-    [span_0](start_span)[span_1](start_span)"explain_jp": "Oracle Cloud Infrastructure (OCI) におけるエフェメラルプリンシパルは、リソースに付与される一時的なセキュリティ資格情報を指します[span_0](end_span)[span_1](end_span)。",
-    [span_2](start_span)[span_3](start_span)"explain_cn": "Oracle Cloud Infrastructure (OCI) 中的临时主体是指授予资源的临时安全凭据[span_2](end_span)[span_3](end_span)。"
-  },
-  {
-    "jp": "Oracle Cloud Infrastructure (OCI) の仮想クラウドネットワーク (VCN)を作成するために使用できる有効な RFC 1918 CIDR プレフィックスはどれですか? (2つ選択)",
-    "cn": "以下哪些是可以用于创建 Oracle Cloud Infrastructure (OCI) 虚拟云网络 (VCN) 的有效 RFC 1918 CIDR 前缀？（选择两个）",
-    "options_jp": [
-      "192.168.0.0/16",
-      "0.0.0.0/0",
-      "192.268.0.0/24",
-      "10.0.0.0/8"
-    ],
-    "options_cn": [
-      "192.168.0.0/16",
-      "0.0.0.0/0",
-      "192.268.0.0/24",
-      "10.0.0.0/8"
-    ],
-    "answer": [0, 3],
-    [span_4](start_span)[span_5](start_span)"explain_jp": "RFC 1918で定義されたプライベートIP範囲（192.168.0.0/16や10.0.0.0/8など）がVCN作成に使用可能です[span_4](end_span)[span_5](end_span)。",
-    [span_6](start_span)[span_7](start_span)"explain_cn": "RFC 1918 定义的私有 IP 地址范围（如 192.168.0.0/16 和 10.0.0.0/8）可用于创建 VCN[span_6](end_span)[span_7](end_span)。"
-  },
-  {
-    "jp": "Oracle Cloud Infrastructure (OCI) ファイルストレージサービスに関する正確な2つの声明はどれですか?",
-    "cn": "关于 Oracle Cloud Infrastructure (OCI) 文件存储服务，哪两项陈述是准确的？",
-    "options_jp": [
-      "マウントターゲット内のファイルシステムとの通信はHTTPSを介して暗号化されています。",
-      "顧客は、自分のVault暗号化キーを使用して、ファイルシステム内のデータを暗号化できます。",
-      "顧客はエクスポートオプションを介してマウントターゲットへの通信を暗号化できます。",
-      "ファイルシステムはデフォルトでOracle管理のキーを使用します。"
-    ],
-    "options_cn": [
-      "挂载目标中与文件系统的通信通过 HTTPS 加密。",
-      "客户可以使用自己的 Vault 加密密钥加密文件系统中的数据。",
-      "客户可以通过导出选项加密到挂载目标的通信。",
-      "文件系统默认使用 Oracle 管理的密钥。"
-    ],
-    "answer": [1, 3],
-    [span_8](start_span)[span_9](start_span)[span_10](start_span)"explain_jp": "OCIファイルストレージは、デフォルトのOracle管理キーまたは顧客管理のVaultキーによる暗号化をサポートしています[span_8](end_span)[span_9](end_span)[span_10](end_span)。",
-    [span_11](start_span)[span_12](start_span)[span_13](start_span)"explain_cn": "OCI 文件存储支持使用默认的 Oracle 管理密钥或客户管理的 Vault 密钥进行加密[span_11](end_span)[span_12](end_span)[span_13](end_span)。"
-  },
-  {
-    "jp": "OCI Object Storageにおいて、即時アクセスと31日間の保持要件を満たしつつコストを最小限に抑える階層はどれですか？",
-    "cn": "在 OCI 对象存储中，哪种分层适合在满足即时访问和 31 天保留要求的同时最小化成本？",
-    "options_jp": [
-      "アーカイブ階層",
-      "自動階層化階層",
-      "標準階層",
-      "低頻度アクセス階層"
-    ],
-    "options_cn": [
-      "归档层 (Archive tier)",
-      "自动分层 (Auto-Tiering tier)",
-      "标准层 (Standard tier)",
-      "低频访问层 (Infrequent Access tier)"
-    ],
-    "answer": 3,
-    [span_14](start_span)[span_15](start_span)"explain_jp": "低頻度アクセス階層は、即時アクセスが必要で頻繁にはアクセスされないデータの保存に最適で、コストを抑えられます[span_14](end_span)[span_15](end_span)。",
-    [span_16](start_span)[span_17](start_span)"explain_cn": "低频访问层非常适合存储需要即时访问但不经常访问的数据，能够降低成本[span_16](end_span)[span_17](end_span)。"
+    "explain_jp": "Oracle Cloud Infrastructure (OCI) におけるエフェメラルプリンシパルは、リソース（コンピュートインスタンスなど）に付与される一時的なセキュリティ資格情報を指します。",
+    "explain_cn": "Oracle Cloud Infrastructure (OCI) 中的临时主体是指授予资源（如计算实例）的临时安全凭据，使其能够安全地与 OCI 服务进行交互。"
   }
 ]
