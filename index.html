@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>OCI刷题系统</title>
-
 <style>
 
 body{
 font-family:Arial;
 padding:20px;
-max-width:650px;
+max-width:700px;
 margin:auto;
 }
 
@@ -41,6 +40,10 @@ display:flex;
 gap:10px;
 }
 
+.nav button{
+width:50%;
+}
+
 .stat{
 margin-top:15px;
 font-weight:bold;
@@ -52,53 +55,113 @@ font-size:16px;
 white-space:pre-line;
 }
 
+.topButtons{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+.topButtons button{
+width:50%;
+text-align:center;
+}
+
+.jumpBox{
+margin-top:10px;
+}
+
 </style>
-
 </head>
-
 <body>
-
 <h2>OCI刷题系统</h2>
-
+<div class="topButtons">
 <button id="langBtn" onclick="toggleLang()">中文</button>
-
+<button onclick="clearProgress()">清空记录</button>
+</div>
+<div class="jumpBox">
+跳到题号:
+<input id="jumpInput" type="number" style="width:80px;">
+<button onclick="jump()">跳转</button>
+</div>
 <h3 id="question">加载题库中...</h3>
-
 <div id="options"></div>
-
 <p id="result"></p>
-
 <div class="nav">
 <button onclick="prev()">上一题</button>
 <button onclick="next()">下一题</button>
 </div>
-
 <div class="stat">
 正确: <span id="correct">0</span> |
 错误: <span id="wrong">0</span> |
 正确率: <span id="rate">0%</span>
 </div>
-
 <script>
 
 let lang="jp"
-let questions=[]
 let current=0
+let correct=0
+let wrong=0
+let answers={}
 
-// 保存用户答案
-let answers=JSON.parse(localStorage.getItem("answers")||"{}")
+loadProgress()
 
-fetch("questions.json")
-.then(res=>res.json())
-.then(data=>{
-questions=data
-showQuestion()
-updateStat()
-})
+/* 题库直接写在这里 */
+
+let questions=[
+
+{
+"jp":"OCI Object Storageにおいて、標準階層からアーカイブ階層に移動した場合の影響は？",
+"cn":"在 OCI 对象存储中，将对象从标准层移动到归档层有什么影响？",
+
+"options_jp":[
+"ストレージコストが増加する",
+"即時アクセスできず復元が必要になる",
+"耐久性が低下する",
+"読み取り専用になる"
+],
+
+"options_cn":[
+"存储成本增加",
+"无法立即访问，需要恢复",
+"耐久性降低",
+"对象变为只读"
+],
+
+"answer":1,
+
+"explain_jp":"Archive階層は低コストですが、取得には復元処理が必要です。",
+"explain_cn":"归档层成本低，但访问前需要执行恢复操作。"
+},
+
+{
+"jp":"OCI Tenancyとは何ですか？",
+"cn":"OCI Tenancy 是什么？",
+
+"options_jp":[
+"リージョン",
+"クラウド内の顧客専用領域",
+"仮想マシン",
+"バックアップ"
+],
+
+"options_cn":[
+"区域",
+"客户在云中的独立空间",
+"虚拟机",
+"备份"
+],
+
+"answer":1,
+
+"explain_jp":"TenancyはOCIリソースを管理する最上位の単位です。",
+"explain_cn":"Tenancy 是 OCI 资源管理的最高级单位。"
+}
+
+]
+
+/* 显示题目 */
 
 function showQuestion(){
-
-if(questions.length===0) return
 
 let q=questions[current]
 
@@ -123,23 +186,13 @@ ${String.fromCharCode(65+i)}. ${o}
 
 document.getElementById("options").innerHTML=html
 
-// 恢复之前选择的答案
-if(answers[current]!=null){
+if(answers[current]!==undefined){
 
-let user=answers[current]
-let q=questions[current]
-
-document.getElementById("opt"+user).classList.add(
-user===q.answer?"correct":"wrong"
-)
-
-document.getElementById("opt"+q.answer).classList.add("correct")
-
-showExplain()
-
-disableOptions()
+showSavedAnswer()
 
 }
+
+saveProgress()
 
 }
 
@@ -147,12 +200,44 @@ function check(i){
 
 let q=questions[current]
 
-// 已经做过不再重复统计
-if(answers[current]!=null) return
-
 answers[current]=i
 
-localStorage.setItem("answers",JSON.stringify(answers))
+for(let k=0;k<q.options_jp.length;k++){
+document.getElementById("opt"+k).disabled=true
+}
+
+if(i===q.answer){
+
+document.getElementById("opt"+i).classList.add("correct")
+correct++
+
+}else{
+
+document.getElementById("opt"+i).classList.add("wrong")
+document.getElementById("opt"+q.answer).classList.add("correct")
+wrong++
+
+}
+
+let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+
+document.getElementById("result").innerText=
+"正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
+
+updateStat()
+saveProgress()
+
+}
+
+function showSavedAnswer(){
+
+let q=questions[current]
+
+let i=answers[current]
+
+for(let k=0;k<q.options_jp.length;k++){
+document.getElementById("opt"+k).disabled=true
+}
 
 if(i===q.answer){
 
@@ -161,36 +246,8 @@ document.getElementById("opt"+i).classList.add("correct")
 }else{
 
 document.getElementById("opt"+i).classList.add("wrong")
-
 document.getElementById("opt"+q.answer).classList.add("correct")
 
-}
-
-showExplain()
-
-disableOptions()
-
-updateStat()
-
-}
-
-function showExplain(){
-
-let q=questions[current]
-
-let explanation = lang==="jp"? q.explain_jp : q.explain_cn
-
-document.getElementById("result").innerText=
-"正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
-
-}
-
-function disableOptions(){
-
-let q=questions[current]
-
-for(let k=0;k<q.options_jp.length;k++){
-document.getElementById("opt"+k).disabled=true
 }
 
 }
@@ -198,8 +255,10 @@ document.getElementById("opt"+k).disabled=true
 function next(){
 
 if(current<questions.length-1){
+
 current++
 showQuestion()
+
 }
 
 }
@@ -207,8 +266,10 @@ showQuestion()
 function prev(){
 
 if(current>0){
+
 current--
 showQuestion()
+
 }
 
 }
@@ -231,24 +292,44 @@ showQuestion()
 
 }
 
-function updateStat(){
+function jump(){
 
-let correct=0
-let wrong=0
+let n=document.getElementById("jumpInput").value
 
-questions.forEach((q,i)=>{
+n=parseInt(n)
 
-if(answers[i]!=null){
+if(n>=1 && n<=questions.length){
 
-if(answers[i]===q.answer){
-correct++
+current=n-1
+showQuestion()
+
 }else{
-wrong++
-}
+
+alert("题号无效")
 
 }
 
-})
+}
+
+function clearProgress(){
+
+if(confirm("确定清空记录吗？")){
+
+localStorage.clear()
+
+answers={}
+correct=0
+wrong=0
+current=0
+
+updateStat()
+showQuestion()
+
+}
+
+}
+
+function updateStat(){
 
 document.getElementById("correct").innerText=correct
 document.getElementById("wrong").innerText=wrong
@@ -260,7 +341,31 @@ document.getElementById("rate").innerText=rate+"%"
 
 }
 
-</script>
+function saveProgress(){
 
-</body>
-</html>
+localStorage.setItem("oci_current",current)
+localStorage.setItem("oci_correct",correct)
+localStorage.setItem("oci_wrong",wrong)
+localStorage.setItem("oci_answers",JSON.stringify(answers))
+
+}
+
+function loadProgress(){
+
+let c=localStorage.getItem("oci_current")
+let co=localStorage.getItem("oci_correct")
+let w=localStorage.getItem("oci_wrong")
+let a=localStorage.getItem("oci_answers")
+
+if(c) current=parseInt(c)
+if(co) correct=parseInt(co)
+if(w) wrong=parseInt(w)
+if(a) answers=JSON.parse(a)
+
+updateStat()
+
+}
+
+showQuestion()
+
+</script>
