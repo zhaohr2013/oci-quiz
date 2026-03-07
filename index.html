@@ -13,10 +13,6 @@ max-width:900px;
 margin:auto;
 }
 
-h2{
-margin-bottom:10px;
-}
-
 h3{
 text-align:left;
 font-size:2.5vw;
@@ -53,19 +49,6 @@ background:#ffdede;
 background:#e6f0ff;
 }
 
-.menu{
-margin-bottom:15px;
-}
-
-.stat{
-margin-top:15px;
-font-weight:bold;
-}
-
-#explain{
-margin-top:10px;
-}
-
 .card{
 display:flex;
 flex-wrap:wrap;
@@ -94,7 +77,7 @@ background:#ffdede;
 
 <h2>OCI刷题系统</h2>
 
-<div class="menu">
+<div>
 
 <button onclick="mode='order';start()">顺序练习</button>
 <button onclick="mode='random';start()">随机练习</button>
@@ -107,26 +90,24 @@ background:#ffdede;
 </div>
 
 <h3 id="progress"></h3>
-
 <h3 id="question"></h3>
 
 <div id="options"></div>
 
-<button onclick="submitAnswer()">提交答案</button>
+<button id="submitBtn" onclick="submitAnswer()">提交答案</button>
+
 <button onclick="prev()">上一题</button>
 <button onclick="next()">下一题</button>
-<button onclick="toggleFav()">⭐收藏</button>
 
 <div id="explain"></div>
 
-<div class="stat">
+<div>
 正确: <span id="correct">0</span> |
 错误: <span id="wrong">0</span> |
 正确率: <span id="rate">0%</span>
 </div>
 
 <h3>答题卡</h3>
-
 <div class="card" id="card"></div>
 
 <script>
@@ -142,8 +123,6 @@ let selected=[]
 
 let answers={}
 let wrongQuestions=[]
-let favorites=[]
-let notes={}
 
 let correct=0
 let wrong=0
@@ -160,7 +139,6 @@ function loadData(){
 
 answers=JSON.parse(localStorage.getItem("answers")||"{}")
 wrongQuestions=JSON.parse(localStorage.getItem("wrong")||"[]")
-favorites=JSON.parse(localStorage.getItem("fav")||"[]")
 
 correct=parseInt(localStorage.getItem("correct")||0)
 wrong=parseInt(localStorage.getItem("wrongCount")||0)
@@ -173,7 +151,6 @@ function saveData(){
 
 localStorage.setItem("answers",JSON.stringify(answers))
 localStorage.setItem("wrong",JSON.stringify(wrongQuestions))
-localStorage.setItem("fav",JSON.stringify(favorites))
 localStorage.setItem("correct",correct)
 localStorage.setItem("wrongCount",wrong)
 
@@ -182,39 +159,25 @@ localStorage.setItem("wrongCount",wrong)
 function start(){
 
 if(mode==="order"){
-
 list=[...questions.keys()]
-
 }
 
 if(mode==="random"){
-
 list=[...questions.keys()].sort(()=>Math.random()-0.5)
-
 }
 
 if(mode==="wrong"){
-
 list=[...wrongQuestions]
-
 }
 
 current=0
 
 renderCard()
-
 showQuestion()
 
 }
 
 function showQuestion(){
-
-if(list.length===0){
-
-document.getElementById("question").innerText="没有题目"
-return
-
-}
 
 selected=[]
 
@@ -239,12 +202,30 @@ ${String.fromCharCode(65+i)}. ${o}
 })
 
 document.getElementById("options").innerHTML=html
-
 document.getElementById("explain").innerHTML=""
+
+let isMulti=Array.isArray(q.answer)
+
+document.getElementById("submitBtn").style.display=
+isMulti?"inline-block":"none"
 
 }
 
 function selectOption(i){
+
+let q=questions[list[current]]
+
+let isMulti=Array.isArray(q.answer)
+
+if(!isMulti){
+
+selected=[i]
+
+judge()
+
+return
+
+}
 
 let btn=document.getElementById("opt"+i)
 
@@ -264,6 +245,12 @@ btn.classList.add("selected")
 
 function submitAnswer(){
 
+judge()
+
+}
+
+function judge(){
+
 let q=questions[list[current]]
 
 let correctAnswer=Array.isArray(q.answer)?q.answer:[q.answer]
@@ -281,17 +268,12 @@ document.getElementById("opt"+a).classList.add("wrong")
 })
 
 if(ok){
-
 correct++
-
 }else{
-
 wrong++
-
 if(!wrongQuestions.includes(list[current])){
 wrongQuestions.push(list[current])
 }
-
 }
 
 let explain=(lang==="jp"?q.explain_jp:q.explain_cn)
@@ -303,10 +285,16 @@ document.getElementById("explain").innerHTML=
 answers[list[current]]=selected
 
 updateStat()
-
 saveData()
-
 renderCard()
+
+if(ok){
+
+setTimeout(()=>{
+next()
+},800)
+
+}
 
 }
 
@@ -322,16 +310,13 @@ if(answers[q]){
 
 let ans=answers[q]
 
-let correctAnswer=questions[q].answer
+let ca=Array.isArray(questions[q].answer)?
+questions[q].answer:[questions[q].answer]
 
-if(JSON.stringify(ans)==JSON.stringify([correctAnswer])){
-
+if(ans.sort().toString()==ca.sort().toString()){
 cls="done"
-
 }else{
-
 cls="error"
-
 }
 
 }
@@ -372,36 +357,14 @@ showQuestion()
 function toggleLang(){
 
 if(lang==="jp"){
-
 lang="cn"
 document.getElementById("langBtn").innerText="日本語"
-
 }else{
-
 lang="jp"
 document.getElementById("langBtn").innerText="中文"
-
 }
 
 showQuestion()
-
-}
-
-function toggleFav(){
-
-let q=list[current]
-
-if(favorites.includes(q)){
-
-favorites=favorites.filter(x=>x!==q)
-
-}else{
-
-favorites.push(q)
-
-}
-
-saveData()
 
 }
 
@@ -426,7 +389,6 @@ localStorage.clear()
 
 answers={}
 wrongQuestions=[]
-favorites=[]
 
 correct=0
 wrong=0
