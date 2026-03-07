@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>OCI刷题系统 Ultimate</title>
-
+  
+document.querySelector("h2").innerText =
+mode==="wrong" ? "OCI刷题系统 - 错题练习" : "OCI刷题系统"
+  
 <style>
 
 body{
@@ -181,7 +184,11 @@ function showQuestion(){
 
 let q=questions[list[current]]
 
+if(mode === "wrong"){
+selected = []
+}else{
 selected = answers[list[current]] ? [...answers[list[current]]] : []
+}
 
 document.getElementById("progress").innerText=
 "题目 "+(current+1)+" / "+list.length
@@ -218,7 +225,7 @@ let isMulti=Array.isArray(q.answer)
 document.getElementById("submitBtn").style.display=
 isMulti?"inline-block":"none"
 
-if(answers[list[current]]){
+if(mode !== "wrong" && answers[list[current]]){
 
 judgeRestore()
 
