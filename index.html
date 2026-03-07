@@ -164,11 +164,9 @@ else if(i===answers[current]) cls+=" wrong"
 
 }
 
-html+=`
-<button class="${cls}" onclick="selectOption(${i})">
+html+=`<button onclick="selectOption(${i})" id="opt${i}" class="option">
 ${String.fromCharCode(65+i)}. ${o}
-</button>
-`
+</button>`
 
 })
 
