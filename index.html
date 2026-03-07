@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>OCI刷题系统 Ultimate</title>
+<h2 id="title">OCI刷题系统</h2>
   
   
 <style>
@@ -159,15 +159,8 @@ localStorage.setItem("wrongCount",wrong)
 
 function start(){
 
-let title = document.getElementById("title")
-
-if(mode==="wrong"){
-title.innerText="OCI刷题系统 - 错题练习"
-}else if(mode==="random"){
-title.innerText="OCI刷题系统 - 随机练习"
-}else{
-title.innerText="OCI刷题系统 - 顺序练习"
-}
+document.getElementById("title").innerText =
+mode==="wrong" ? "OCI刷题系统 - 错题练习" : "OCI刷题系统"
 
 if(mode==="order"){
 list=[...questions.keys()]
