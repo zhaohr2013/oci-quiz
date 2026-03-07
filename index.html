@@ -164,7 +164,7 @@ else if(i===answers[current]) cls+=" wrong"
 
 }
 
-html+=`<button onclick="selectOption(${i})" id="opt${i}" class="option">
+html+=`<button onclick="choose(${i})" id="opt${i}" class="option">
 ${String.fromCharCode(65+i)}. ${o}
 </button>`
 
@@ -194,11 +194,60 @@ btn.style.background="#e6f0ff"
 
 }
 
+let selected=[]
+
+function choose(i){
+
+let q=questions[current]
+
+let isMulti = Array.isArray(q.answer)
+
+if(!isMulti){
+checkSingle(i)
+return
+}
+
+selectOption(i)
+
+}
+
+function checkSingle(i){
+
+let q=questions[current]
+
+for(let k=0;k<q.options_jp.length;k++){
+document.getElementById("opt"+k).disabled=true
+}
+
+if(i===q.answer){
+
+document.getElementById("opt"+i).classList.add("correct")
+
+correct++
+
+}else{
+
+document.getElementById("opt"+i).classList.add("wrong")
+document.getElementById("opt"+q.answer).classList.add("correct")
+
+wrong++
+
+}
+
+let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+
+document.getElementById("result").innerText=
+"正确答案: "+String.fromCharCode(65+q.answer)+"\n解析: "+explanation
+
+updateStat()
+
+}
+
 function submitAnswer(){
 
 let q=questions[current]
 
-let correctAnswer = Array.isArray(q.answer) ? q.answer : [q.answer]
+let correctAnswer = q.answer
 
 let ok = selected.sort().toString() === correctAnswer.sort().toString()
 
@@ -209,7 +258,6 @@ document.getElementById("opt"+k).disabled=true
 if(ok){
 
 correct++
-document.getElementById("result").innerText="✔ 正确"
 
 correctAnswer.forEach(a=>{
 document.getElementById("opt"+a).classList.add("correct")
@@ -229,11 +277,17 @@ document.getElementById("opt"+a).classList.add("wrong")
 }
 })
 
+}
+
 let explanation = lang==="jp"? q.explain_jp : q.explain_cn
 
 document.getElementById("result").innerText=
-"✘ 错误\n正确答案: "+correctAnswer.map(a=>String.fromCharCode(65+a)).join(",")+
+"正确答案: "+correctAnswer.map(a=>String.fromCharCode(65+a)).join(",")+
 "\n解析: "+explanation
+
+updateStat()
+
+selected=[]
 
 }
 
