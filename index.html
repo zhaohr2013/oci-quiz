@@ -79,6 +79,8 @@ margin-top:10px;
 <h3 id="question"></h3>
 
 <div id="options"></div>
+
+<button onclick="submitAnswer()">提交答案</button>
 <button onclick="prev()">上一题</button>
 <button onclick="next()">下一题</button>
 <div id="explain"></div>
@@ -163,7 +165,7 @@ else if(i===answers[current]) cls+=" wrong"
 }
 
 html+=`
-<button class="${cls}" onclick="select(${i})">
+<button class="${cls}" onclick="selectOption(${i})">
 ${String.fromCharCode(65+i)}. ${o}
 </button>
 `
@@ -176,6 +178,72 @@ showExplain()
 
 }
 
+function selectOption(i){
+
+let btn=document.getElementById("opt"+i)
+
+if(selected.includes(i)){
+
+selected=selected.filter(x=>x!==i)
+btn.style.background=""
+
+}else{
+
+selected.push(i)
+btn.style.background="#e6f0ff"
+
+}
+
+}
+
+function submitAnswer(){
+
+let q=questions[current]
+
+let correctAnswer = Array.isArray(q.answer) ? q.answer : [q.answer]
+
+let ok = selected.sort().toString() === correctAnswer.sort().toString()
+
+for(let k=0;k<q.options_jp.length;k++){
+document.getElementById("opt"+k).disabled=true
+}
+
+if(ok){
+
+correct++
+document.getElementById("result").innerText="✔ 正确"
+
+correctAnswer.forEach(a=>{
+document.getElementById("opt"+a).classList.add("correct")
+})
+
+}else{
+
+wrong++
+
+correctAnswer.forEach(a=>{
+document.getElementById("opt"+a).classList.add("correct")
+})
+
+selected.forEach(a=>{
+if(!correctAnswer.includes(a)){
+document.getElementById("opt"+a).classList.add("wrong")
+}
+})
+
+let explanation = lang==="jp"? q.explain_jp : q.explain_cn
+
+document.getElementById("result").innerText=
+"✘ 错误\n正确答案: "+correctAnswer.map(a=>String.fromCharCode(65+a)).join(",")+
+"\n解析: "+explanation
+
+}
+
+updateStat()
+
+selected=[]
+
+}
 function select(i){
 
 if(answers[current]!=null) return
