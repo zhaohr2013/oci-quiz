@@ -312,9 +312,15 @@ if(ok){
 correct++
 }else{
 wrong++
+
+if(mode !== "wrong"){
 if(!wrongQuestions.includes(list[current])){
 wrongQuestions.push(list[current])
 }
+}
+
+
+  
 }
 
 let explain=(lang==="jp"?q.explain_jp:q.explain_cn)
